@@ -3,7 +3,7 @@
             [clojure.java.io :as io]
             [clojure.pprint])
   (:import
-    java.io.File
+    [java.io.File]
     [java.nio.file FileSystems Paths StandardWatchEventKinds]
     [javax.script Invocable ScriptEngineManager]))
 
