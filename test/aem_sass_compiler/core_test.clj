@@ -9,5 +9,5 @@
 
 (deftest test-compiler
   (is (= ".selector {\n  margin: 10px; }\n  .selector .nested {\n    margin: 5px; }\n"
-         (sass "test/test.sass"))))
+         (compile-file "test/test.sass"))))
 

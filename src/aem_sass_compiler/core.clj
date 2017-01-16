@@ -1,5 +1,4 @@
 (ns aem-sass-compiler.core
-  (:require [leiningen.sass :refer :all])
   (:gen-class))
 
 (defn -main
