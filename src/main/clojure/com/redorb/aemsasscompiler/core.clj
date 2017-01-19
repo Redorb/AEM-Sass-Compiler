@@ -1,4 +1,4 @@
-(ns aem-sass-compiler.core
+(ns com.redorb.aemsasscompiler.core
   (:gen-class))
 
 (defn -main

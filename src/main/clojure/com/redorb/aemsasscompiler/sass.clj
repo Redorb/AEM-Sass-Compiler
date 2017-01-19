@@ -1,4 +1,4 @@
-(ns aem-sass-compiler.sass
+(ns com.redorb.aemsasscompiler.sass
   (:require [clojure.set :refer [rename-keys]]
             [clojure.java.io :as io]
             [clojure.pprint])
