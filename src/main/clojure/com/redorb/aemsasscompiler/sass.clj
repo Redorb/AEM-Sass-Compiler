@@ -6,12 +6,7 @@
   (:import
     java.io.File
     [java.nio.file FileSystems Paths StandardWatchEventKinds]
-    [javax.script Invocable ScriptEngineManager]
-    [com.adobe.granite.ui.clientlibs.script.CompilerContext]
-    [com.adobe.granite.ui.clientlibs.script.ScriptCompiler]
-    [com.adobe.granite.ui.clientlibs.script.ScriptResource]
-    [com.adobe.granite.ui.clientlibs.script.ScriptResourceProvider]
-    [com.adobe.granite.ui.clientlibs.script.Utils]))
+    [javax.script Invocable ScriptEngineManager]))
 
   (defonce engine (let [e (.getEngineByName (ScriptEngineManager.) "nashorn")]
                   (.eval e (io/reader (io/resource "sass.min.js")))
