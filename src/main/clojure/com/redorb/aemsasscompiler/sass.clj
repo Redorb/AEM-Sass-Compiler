@@ -1,7 +1,8 @@
 (ns com.redorb.aemsasscompiler.sass
   (:require [clojure.set :refer [rename-keys]]
             [clojure.java.io :as io]
-            [clojure.pprint])
+            [clojure.pprint]
+            [clojure.osgi.services :as os])
   (:import
     java.io.File
     [java.nio.file FileSystems Paths StandardWatchEventKinds]
