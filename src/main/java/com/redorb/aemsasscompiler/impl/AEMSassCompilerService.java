@@ -47,25 +47,20 @@ public class AEMSassCompilerService implements ScriptCompiler {
     }
 
     public void compile(Collection <ScriptResource> src, Writer dst, CompilerContext ctx) throws IOException {
+        src.stream().forEach(AEMSassCompilerService::compileScriptResource);
+    }
 
-        for (ScriptResource r : src)
-        {
-            log.info("Compiling {}...", r.getName());
+    private static void compileScriptResource(ScriptResource res) {
+        log.info("Compiling {}...", res.getName());
 
-            String fileSrc = retrieveInputString(r);
-            if (log.isDebugEnabled()) {
-                log.debug("less source: {}", fileSrc);
-            }
-            try {
-
-            } catch (Exception ex) {
-                log.error("unexpected error during compile", ex);
-            }
+        String fileSrc = retrieveInputString(res);
+        if (log.isDebugEnabled()) {
+            log.debug("less source: {}", fileSrc);
         }
     }
 
     private void dumpError(Writer out, String name, String message, String lessSrc) throws IOException {
-        log.error("failed to compile less {}: {}", name, message);
+        log.error("failed to compile sass {}: {}", name, message);
         out.write("/*****************************************************\n");
         out.write("Sass compilation failed due a JavaScript error!\n\n");
         out.write("Input: " + name + "\n");
@@ -75,15 +70,16 @@ public class AEMSassCompilerService implements ScriptCompiler {
         out.write(lessSrc);
     }
 
-    private static String retrieveInputString(ScriptResource r) throws IOException {
+    private static String retrieveInputString(ScriptResource r) {
         String src = "";
-        Reader in = r.getReader();
-        try {
+
+        try (Reader in = r.getReader()) {
             src = IOUtils.toString( in );
             src = src.replace("\r", "");
-        } finally {
-            IOUtils.closeQuietly( in );
+        } catch (IOException e) {
+            log.error("failed to compile sass {}", e.getMessage());
         }
+
         return src;
     }
 
