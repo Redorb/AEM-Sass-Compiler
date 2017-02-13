@@ -3,17 +3,20 @@ package com.redorb.aemsasscompiler.impl;
 import com.adobe.granite.ui.clientlibs.script.CompilerContext;
 import com.adobe.granite.ui.clientlibs.script.ScriptCompiler;
 import com.adobe.granite.ui.clientlibs.script.ScriptResource;
+import com.redorb.aemsasscompiler.SassCompiler;
 import org.apache.commons.io.IOUtils;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Service;
 import org.apache.jackrabbit.util.Text;
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.Writer;
+import javax.script.Invocable;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
+import java.io.*;
 import java.util.Collection;
 
 @Component
@@ -22,9 +25,9 @@ import java.util.Collection;
 })
 public class AEMSassCompilerService implements ScriptCompiler {
     private static final Logger log = LoggerFactory.getLogger(AEMSassCompilerService.class);
+    private SassCompiler sassCompiler = SassCompiler.getInstance();
 
     public AEMSassCompilerService() {
-
     }
 
     public String getName() {
@@ -45,6 +48,20 @@ public class AEMSassCompilerService implements ScriptCompiler {
 
     public void compile(Collection <ScriptResource> src, Writer dst, CompilerContext ctx) throws IOException {
 
+        for (ScriptResource r : src)
+        {
+            log.info("Compiling {}...", r.getName());
+
+            String fileSrc = retrieveInputString(r);
+            if (log.isDebugEnabled()) {
+                log.debug("less source: {}", fileSrc);
+            }
+            try {
+
+            } catch (Exception ex) {
+                log.error("unexpected error during compile", ex);
+            }
+        }
     }
 
     private void dumpError(Writer out, String name, String message, String lessSrc) throws IOException {
