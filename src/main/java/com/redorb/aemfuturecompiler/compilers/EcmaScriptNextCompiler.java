@@ -1,4 +1,4 @@
-package com.redorb.aemfuturecompiler;
+package com.redorb.aemfuturecompiler.compilers;
 
 import com.google.javascript.jscomp.*;
 import com.google.javascript.jscomp.Compiler;
@@ -13,13 +13,7 @@ public class EcmaScriptNextCompiler {
     private static final Logger log = LoggerFactory.getLogger(SassCompiler.class);
     private static EcmaScriptNextCompiler ecmaScriptNextCompiler = null;
 
-    private EcmaScriptNextCompiler() {
-        this.setupCompiler();
-    }
-
-    private void setupCompiler() {
-
-    }
+    private EcmaScriptNextCompiler() {}
 
     public static EcmaScriptNextCompiler getInstance() {
         if (ecmaScriptNextCompiler == null) {
@@ -38,11 +32,14 @@ public class EcmaScriptNextCompiler {
 
         // Add our max language in, in this case ESNext.
         // https://developer.mozilla.org/en-US/docs/Web/JavaScript/New_in_JavaScript/ECMAScript_Next_support_in_Mozilla
+        // Somethings however can't be transpiled to ES2015 such as built in type subclassing and async.
         options.setLanguageIn(CompilerOptions.LanguageMode.ECMASCRIPT_NEXT);
 
         // Add our language out, which is ES5 to support IE9+
         // https://kangax.github.io/compat-table/es5/
         options.setLanguageOut(CompilerOptions.LanguageMode.ECMASCRIPT5);
+
+        options.setStrictModeInput(false);
 
         // Advanced mode is used here, but additional options could be set too.
         CompilationLevel.ADVANCED_OPTIMIZATIONS.setOptionsForCompilationLevel(options);

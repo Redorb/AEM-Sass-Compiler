@@ -1,4 +1,4 @@
-package com.redorb.aemfuturecompiler;
+package com.redorb.aemfuturecompiler.compilers;
 
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;

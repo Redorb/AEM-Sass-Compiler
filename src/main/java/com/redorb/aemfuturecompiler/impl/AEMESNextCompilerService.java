@@ -15,26 +15,30 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 @Component
 @Service({
     ScriptCompiler.class
 })
-public class AEMSassCompilerService implements ScriptCompiler {
-    private static final Logger log = LoggerFactory.getLogger(AEMSassCompilerService.class);
+public class AEMESNextCompilerService implements ScriptCompiler {
+    private static final Logger log = LoggerFactory.getLogger(AEMESNextCompilerService.class);
     private SassCompiler sassCompiler = SassCompiler.getInstance();
-    private Set<String> supportedFilesTypes = new HashSet<>(Arrays.asList("scss", ".scss"));
+    private Set<String> supportedFilesTypes = new HashSet<>(
+            Arrays.asList("js", ".js", "es6", ".es6", "es7", ".es7"));
 
-    public AEMSassCompilerService() {
+    public AEMESNextCompilerService() {
     }
 
     public String getName() {
-        return "scss";
+        return "js";
     }
 
     public String getMimeType() {
-        return "text/css";
+        return "text/javascript";
     }
 
     public boolean handles(String s) {
@@ -42,11 +46,11 @@ public class AEMSassCompilerService implements ScriptCompiler {
     }
 
     public String getOutputExtension() {
-        return "css";
+        return "js";
     }
 
     public void compile(Collection <ScriptResource> src, Writer dst, CompilerContext ctx) throws IOException {
-        src.parallelStream().forEach(AEMSassCompilerService::compileScriptResource);
+        src.parallelStream().forEach(AEMESNextCompilerService::compileScriptResource);
     }
 
     private static void compileScriptResource(ScriptResource res) {
@@ -54,19 +58,19 @@ public class AEMSassCompilerService implements ScriptCompiler {
 
         String fileSrc = retrieveInputString(res);
         if (log.isDebugEnabled()) {
-            log.debug("scss source: {}", fileSrc);
+            log.debug("js source: {}", fileSrc);
         }
     }
 
-    private void dumpError(Writer out, String name, String message, String lessSrc) throws IOException {
-        log.error("failed to compile sass {}: {}", name, message);
+    private void dumpError(Writer out, String name, String message, String jsSrc) throws IOException {
+        log.error("failed to compile js {}: {}", name, message);
         out.write("/*****************************************************\n");
-        out.write("Scss compilation failed due a JavaScript error!\n\n");
+        out.write("JavaScript compilation failed due a JavaScript error!\n\n");
         out.write("Input: " + name + "\n");
         out.write("Error: " + message + "\n\n");
-        out.write("(uncompiled Scss src is included below)\n");
+        out.write("(uncompiled JavaScript src is included below)\n");
         out.write("*****************************************************/\n");
-        out.write(lessSrc);
+        out.write(jsSrc);
     }
 
     private static String retrieveInputString(ScriptResource r) {
@@ -76,7 +80,7 @@ public class AEMSassCompilerService implements ScriptCompiler {
             src = IOUtils.toString( in );
             src = src.replace("\r", "");
         } catch (IOException e) {
-            log.error("failed to compile scss {}", e.getMessage());
+            log.error("failed to compile js {}", e.getMessage());
         }
 
         return src;
@@ -91,13 +95,13 @@ public class AEMSassCompilerService implements ScriptCompiler {
 
         public String load(String path) throws FileNotFoundException {
             if (!path.startsWith("/")) {
-                AEMSassCompilerService.log.warn("Only absolute paths supported in @import statements: {}", path);
+                AEMESNextCompilerService.log.warn("Only absolute paths supported in @import statements: {}", path);
                 throw new FileNotFoundException(path);
             }
             String name = Text.getName(path);
             String ext = Text.getName(name, '.');
             if (ext.length() == 0) {
-                path = path + ".scss";
+                path = path + ".js";
             }
             try {
                 ScriptResource r = this.ctx.getResourceProvider().getResource(path);
@@ -105,9 +109,9 @@ public class AEMSassCompilerService implements ScriptCompiler {
                     throw new FileNotFoundException(path);
                 }
                 this.ctx.getDependencies().add(path);
-                return AEMSassCompilerService.retrieveInputString(r);
+                return AEMESNextCompilerService.retrieveInputString(r);
             } catch (Exception e) {
-                AEMSassCompilerService.log.error("Error while loading @import resource {}", path, e);
+                AEMESNextCompilerService.log.error("Error while loading @import resource {}", path, e);
                 throw new FileNotFoundException(path);
             }
         }
