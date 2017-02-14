@@ -25,7 +25,7 @@ import java.util.Set;
 
 @Component
 @Service({
-    ScriptCompiler.class
+    AEMESNextCompilerService.class
 })
 public class AEMESNextCompilerService implements ScriptCompiler {
     private static final Logger log = LoggerFactory.getLogger(AEMESNextCompilerService.class);

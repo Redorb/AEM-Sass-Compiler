@@ -21,7 +21,7 @@ import java.util.*;
 
 @Component
 @Service({
-    ScriptCompiler.class
+    AEMSassCompilerService.class
 })
 public class AEMSassCompilerService implements ScriptCompiler {
     private static final Logger log = LoggerFactory.getLogger(AEMSassCompilerService.class);
