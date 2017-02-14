@@ -24,6 +24,18 @@ public class EcmaScriptNextCompiler {
     }
 
     public String compileFile(String fileURI) throws IOException {
+        List<SourceFile> source = new ArrayList<>();
+        source.add(SourceFile.fromFile(fileURI));
+        return compile(source);
+    }
+
+    public String compileString(String src) throws IOException {
+        List<SourceFile> source = new ArrayList<>();
+        source.add(SourceFile.fromCode("toEval.js", src));
+        return compile(source);
+    }
+
+    private String compile(List<SourceFile> source) throws IOException {
         Compiler compiler = new Compiler();
 
         // Steal the builtin externs from the command line runner defaults.
@@ -44,8 +56,6 @@ public class EcmaScriptNextCompiler {
         // Advanced mode is used here, but additional options could be set too.
         CompilationLevel.ADVANCED_OPTIMIZATIONS.setOptionsForCompilationLevel(options);
 
-        List<SourceFile> source = new ArrayList<>();
-        source.add(SourceFile.fromFile(fileURI));
         compiler.compile(extern, source, options);
         return compiler.toSource();
     }

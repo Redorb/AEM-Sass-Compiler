@@ -45,8 +45,11 @@ public class SassCompiler {
 
     public String compileFile(String fileURI) throws IOException, ScriptException, NoSuchMethodException {
         String fileString = FileUtils.readFileToString(new File(fileURI), "UTF-8");
-        String[] stringArr = {fileString};
-        ((Invocable) scriptEngine).invokeFunction("setSource", fileString);
+        return compileString(fileString);
+    }
+
+    public String compileString(String src) throws ScriptException, NoSuchMethodException {
+        ((Invocable) scriptEngine).invokeFunction("setSource", src);
         return (String) scriptEngine.eval("Sass.compile(source)");
     }
 }

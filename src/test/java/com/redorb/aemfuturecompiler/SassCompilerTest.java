@@ -9,7 +9,7 @@ import static org.junit.Assert.fail;
 public class SassCompilerTest {
 
     @Test
-    public void testBasicCompile() {
+    public void testBasicCompileFile() {
         SassCompiler sass = SassCompiler.getInstance();
         try {
             assertEquals(".selector {\n  margin: 10px; }\n  .selector .nested {\n    margin: 5px; }\n",
@@ -20,7 +20,24 @@ public class SassCompilerTest {
     }
 
     @Test
-    public void testExtendCompile() {
+    public void testBasicCompileString() {
+        SassCompiler sass = SassCompiler.getInstance();
+        try {
+            assertEquals(".selector {\n  margin: 10px; }\n  .selector .nested {\n    margin: 5px; }\n",
+                    sass.compileString("$foo: 10px;\n" +
+                            ".selector {\n" +
+                            "  margin: $foo;\n" +
+                            "  .nested {\n" +
+                            "    margin: $foo / 2;\n" +
+                            "  }\n" +
+                            "}"));
+        } catch (Exception e) {
+            fail();
+        }
+    }
+
+    @Test
+    public void testExtendCompileFile() {
         SassCompiler sass = SassCompiler.getInstance();
         try {
             assertEquals(".message, .success, .error, .warning {\n" +
