@@ -1,6 +1,6 @@
-# aem-sass-compiler
+# AEM Sass and ESNext Compiler
 
-Currently AEM's built-in CSS framework support is limited to normal CSS and an old version of Less. The old version of Less can't be upgraded easily as LESS dropped support for the old Rhino implementation that it's built on. This version is meant to be more of a research project, but with eventually full support of Sass in AEM. I'm hoping to be able to extend what I learn from this to also add ES6 support.
+Currently AEM's built-in CSS framework support is limited to normal CSS and an old version of Less. The old version of Less can't be upgraded easily as LESS dropped support for the old Rhino implementation that it's built on. This version is meant to be more of a research project, but with eventually full support of Sass in AEM. I am also adding in support for ESNext compilation as a freebie with some of high performance google closure optimizations.
 
 The other alternative to this plugin is to use a setup similar to https://github.com/Redorb/AEM-Future it's a bit more clunky but it's been tested in a production project and works easily after the initial setup.
 
