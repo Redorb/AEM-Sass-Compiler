@@ -12,6 +12,7 @@ import org.apache.jackrabbit.util.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.script.ScriptException;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Reader;
@@ -26,8 +27,19 @@ public class AEMSassCompilerService implements ScriptCompiler {
     private static final Logger log = LoggerFactory.getLogger(AEMSassCompilerService.class);
     private SassCompiler sassCompiler = SassCompiler.getInstance();
     private Set<String> supportedFilesTypes = new HashSet<>(Arrays.asList("scss", ".scss"));
+    private boolean includeSourceMarkers;
 
     public AEMSassCompilerService() {
+    }
+
+    public boolean isIncludeSourceMarkers()
+    {
+        return this.includeSourceMarkers;
+    }
+
+    public void setIncludeSourceMarkers(boolean includeSourceMarkers)
+    {
+        this.includeSourceMarkers = includeSourceMarkers;
     }
 
     public String getName() {
@@ -47,15 +59,43 @@ public class AEMSassCompilerService implements ScriptCompiler {
     }
 
     public void compile(Collection <ScriptResource> src, Writer dst, CompilerContext ctx) throws IOException {
-        src.parallelStream().forEach(AEMSassCompilerService::compileScriptResource);
+        ResourceLoader compilerContextRes = new ResourceLoader(ctx);
+        src.parallelStream().forEach(res -> AEMSassCompilerService.compileScriptResource(res, dst, ctx, compilerContextRes, this.includeSourceMarkers));
     }
 
-    private static void compileScriptResource(ScriptResource res) {
+    private static void compileScriptResource(ScriptResource res, Writer dst, CompilerContext ctx, ResourceLoader resourceLoader, Boolean includeSourceMarkers) {
+        long t0 = System.currentTimeMillis();
         log.info("Compiling {}...", res.getName());
 
         String fileSrc = retrieveInputString(res);
         if (log.isDebugEnabled()) {
             log.debug("scss source: {}", fileSrc);
+        }
+
+        try {
+            SassCompiler compiler = SassCompiler.getInstance();
+            long t1 = System.currentTimeMillis();
+            log.info("Setup less compiler environment in {}ms", t1 - t0);
+
+            // Compile css and rewrite paths in files to reference css.
+            // TODO: Write own compiler method to replace this path rewrite.
+            String css = Utils.rewriteUrlsInCss(ctx.getDestinationPath(), res.getName(), compiler.compileString(fileSrc));
+            long t2 = System.currentTimeMillis();
+            if (log.isDebugEnabled()) {
+                log.debug("compiled output is: {}", css);
+            }
+            if (includeSourceMarkers)
+            {
+                dst.write(String.format("/*---------------------------------------------------------------< %s >---*/%n", Text.getName(res.getName())));
+                dst.write(String.format("/* %s (%dms) */%n", new Object[] { res.getName(), Long.valueOf(t2 - t1) }));
+            }
+            dst.write(css);
+        } catch (ScriptException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

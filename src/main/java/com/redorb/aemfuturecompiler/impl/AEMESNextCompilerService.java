@@ -3,6 +3,8 @@ package com.redorb.aemfuturecompiler.impl;
 import com.adobe.granite.ui.clientlibs.script.CompilerContext;
 import com.adobe.granite.ui.clientlibs.script.ScriptCompiler;
 import com.adobe.granite.ui.clientlibs.script.ScriptResource;
+import com.adobe.granite.ui.clientlibs.script.Utils;
+import com.redorb.aemfuturecompiler.compilers.EcmaScriptNextCompiler;
 import com.redorb.aemfuturecompiler.compilers.SassCompiler;
 import org.apache.commons.io.IOUtils;
 import org.apache.felix.scr.annotations.Component;
@@ -11,6 +13,7 @@ import org.apache.jackrabbit.util.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.script.ScriptException;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Reader;
@@ -29,8 +32,19 @@ public class AEMESNextCompilerService implements ScriptCompiler {
     private SassCompiler sassCompiler = SassCompiler.getInstance();
     private Set<String> supportedFilesTypes = new HashSet<>(
             Arrays.asList("js", ".js", "es6", ".es6", "es7", ".es7"));
+    private boolean includeSourceMarkers;
 
     public AEMESNextCompilerService() {
+    }
+
+    public boolean isIncludeSourceMarkers()
+    {
+        return this.includeSourceMarkers;
+    }
+
+    public void setIncludeSourceMarkers(boolean includeSourceMarkers)
+    {
+        this.includeSourceMarkers = includeSourceMarkers;
     }
 
     public String getName() {
@@ -50,15 +64,39 @@ public class AEMESNextCompilerService implements ScriptCompiler {
     }
 
     public void compile(Collection <ScriptResource> src, Writer dst, CompilerContext ctx) throws IOException {
-        src.parallelStream().forEach(AEMESNextCompilerService::compileScriptResource);
+        src.parallelStream().forEach(res -> AEMESNextCompilerService.compileScriptResource(res, dst, this.includeSourceMarkers));
     }
 
-    private static void compileScriptResource(ScriptResource res) {
+    // TODO: A lot of this is redundant with SassCompiler, make util class method that takes in compiler and extend them from common interface.
+    private static void compileScriptResource(ScriptResource res, Writer dst, Boolean includeSourceMarkers) {
+        long t0 = System.currentTimeMillis();
         log.info("Compiling {}...", res.getName());
 
         String fileSrc = retrieveInputString(res);
         if (log.isDebugEnabled()) {
             log.debug("js source: {}", fileSrc);
+        }
+
+        try {
+            EcmaScriptNextCompiler compiler = EcmaScriptNextCompiler.getInstance();
+            long t1 = System.currentTimeMillis();
+            log.info("Setup js compiler environment in {}ms", t1 - t0);
+
+            // Compile css and rewrite paths in files to reference css.
+            // TODO: Write own compiler method to do a path rewrite.
+            String css = compiler.compileString(fileSrc);
+            long t2 = System.currentTimeMillis();
+            if (log.isDebugEnabled()) {
+                log.debug("compiled output is: {}", css);
+            }
+            if (includeSourceMarkers)
+            {
+                dst.write(String.format("/*---------------------------------------------------------------< %s >---*/%n", Text.getName(res.getName())));
+                dst.write(String.format("/* %s (%dms) */%n", new Object[] { res.getName(), Long.valueOf(t2 - t1) }));
+            }
+            dst.write(css);
+        }  catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
