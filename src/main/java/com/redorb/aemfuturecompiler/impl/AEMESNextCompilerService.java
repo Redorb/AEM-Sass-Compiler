@@ -24,9 +24,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Component
-@Service({
-    AEMESNextCompilerService.class
-})
+@Service
 public class AEMESNextCompilerService implements ScriptCompiler {
     private static final Logger log = LoggerFactory.getLogger(AEMESNextCompilerService.class);
     private SassCompiler sassCompiler = SassCompiler.getInstance();

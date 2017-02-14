@@ -20,9 +20,7 @@ import java.io.Writer;
 import java.util.*;
 
 @Component
-@Service({
-    AEMSassCompilerService.class
-})
+@Service
 public class AEMSassCompilerService implements ScriptCompiler {
     private static final Logger log = LoggerFactory.getLogger(AEMSassCompilerService.class);
     private SassCompiler sassCompiler = SassCompiler.getInstance();
