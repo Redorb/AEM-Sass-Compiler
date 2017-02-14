@@ -21,11 +21,11 @@ import java.util.Collection;
 @Service({
     ScriptCompiler.class
 })
-public class AEMSassCompilerService implements ScriptCompiler {
-    private static final Logger log = LoggerFactory.getLogger(AEMSassCompilerService.class);
+public class AEMFutureCompilerService implements ScriptCompiler {
+    private static final Logger log = LoggerFactory.getLogger(AEMFutureCompilerService.class);
     private SassCompiler sassCompiler = SassCompiler.getInstance();
 
-    public AEMSassCompilerService() {
+    public AEMFutureCompilerService() {
     }
 
     public String getName() {
@@ -45,7 +45,7 @@ public class AEMSassCompilerService implements ScriptCompiler {
     }
 
     public void compile(Collection <ScriptResource> src, Writer dst, CompilerContext ctx) throws IOException {
-        src.stream().forEach(AEMSassCompilerService::compileScriptResource);
+        src.stream().forEach(AEMFutureCompilerService::compileScriptResource);
     }
 
     private static void compileScriptResource(ScriptResource res) {
@@ -90,7 +90,7 @@ public class AEMSassCompilerService implements ScriptCompiler {
 
         public String load(String path) throws FileNotFoundException {
             if (!path.startsWith("/")) {
-                AEMSassCompilerService.log.warn("Only absolute paths supported in @import statements: {}", path);
+                AEMFutureCompilerService.log.warn("Only absolute paths supported in @import statements: {}", path);
                 throw new FileNotFoundException(path);
             }
             String name = Text.getName(path);
@@ -104,9 +104,9 @@ public class AEMSassCompilerService implements ScriptCompiler {
                     throw new FileNotFoundException(path);
                 }
                 this.ctx.getDependencies().add(path);
-                return AEMSassCompilerService.retrieveInputString(r);
+                return AEMFutureCompilerService.retrieveInputString(r);
             } catch (Exception e) {
-                AEMSassCompilerService.log.error("Error while loading @import resource {}", path, e);
+                AEMFutureCompilerService.log.error("Error while loading @import resource {}", path, e);
                 throw new FileNotFoundException(path);
             }
         }
