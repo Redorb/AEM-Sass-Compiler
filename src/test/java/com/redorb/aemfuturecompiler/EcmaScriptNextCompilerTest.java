@@ -1,4 +1,4 @@
-package com.redorb.aemsasscompiler;
+package com.redorb.aemfuturecompiler;
 
 import org.junit.Test;
 

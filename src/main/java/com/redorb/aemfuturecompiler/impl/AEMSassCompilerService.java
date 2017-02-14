@@ -1,9 +1,9 @@
-package com.redorb.aemsasscompiler.impl;
+package com.redorb.aemfuturecompiler.impl;
 
 import com.adobe.granite.ui.clientlibs.script.CompilerContext;
 import com.adobe.granite.ui.clientlibs.script.ScriptCompiler;
 import com.adobe.granite.ui.clientlibs.script.ScriptResource;
-import com.redorb.aemsasscompiler.SassCompiler;
+import com.redorb.aemfuturecompiler.SassCompiler;
 import org.apache.commons.io.IOUtils;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Service;

@@ -1,4 +1,4 @@
-package com.redorb.aemsasscompiler;
+package com.redorb.aemfuturecompiler;
 
 import com.google.javascript.jscomp.*;
 import com.google.javascript.jscomp.Compiler;
