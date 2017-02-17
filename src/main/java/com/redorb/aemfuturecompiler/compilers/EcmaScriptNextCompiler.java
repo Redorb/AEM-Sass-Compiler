@@ -11,17 +11,8 @@ import java.util.List;
 
 public class EcmaScriptNextCompiler {
     private static final Logger log = LoggerFactory.getLogger(SassCompiler.class);
-    private static EcmaScriptNextCompiler ecmaScriptNextCompiler = null;
 
-    private EcmaScriptNextCompiler() {}
-
-    public static EcmaScriptNextCompiler getInstance() {
-        if (ecmaScriptNextCompiler == null) {
-            ecmaScriptNextCompiler = new EcmaScriptNextCompiler();
-        }
-
-        return ecmaScriptNextCompiler;
-    }
+    public EcmaScriptNextCompiler() {}
 
     public String compileFile(String fileURI) throws IOException {
         List<SourceFile> source = new ArrayList<>();

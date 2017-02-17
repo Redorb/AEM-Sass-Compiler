@@ -16,19 +16,10 @@ import java.io.InputStreamReader;
 // Look to migrate to Libsass for performance.
 public class SassCompiler {
     private static final Logger log = LoggerFactory.getLogger(SassCompiler.class);
-    private static SassCompiler sassCompiler = null;
     private final ScriptEngine scriptEngine = (new ScriptEngineManager()).getEngineByName("nashorn");
 
-    private SassCompiler() {
+    public SassCompiler() {
         this.setupCompiler();
-    }
-
-    public static SassCompiler getInstance() {
-        if (sassCompiler == null) {
-            sassCompiler = new SassCompiler();
-        }
-
-        return sassCompiler;
     }
 
     private void setupCompiler() {

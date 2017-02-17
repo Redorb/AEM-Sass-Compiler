@@ -23,7 +23,7 @@ import java.util.*;
 import static org.osgi.framework.Constants.SERVICE_DESCRIPTION;
 import static org.osgi.framework.Constants.SERVICE_VENDOR;
 
-@Component(immediate = true)
+@Component(immediate = true, metatype = false)
 @Service(ScriptCompiler.class)
 @org.apache.felix.scr.annotations.Properties({
         @Property(
@@ -36,8 +36,7 @@ import static org.osgi.framework.Constants.SERVICE_VENDOR;
         )
 })
 public class AEMSassCompilerService implements ScriptCompiler {
-    private static final Logger log = LoggerFactory.getLogger(AEMSassCompilerService.class);
-    private SassCompiler sassCompiler = SassCompiler.getInstance();
+    static final Logger log = LoggerFactory.getLogger(AEMSassCompilerService.class);
     private Set<String> supportedFilesTypes = new HashSet<>(Arrays.asList("scss", ".scss"));
     private boolean includeSourceMarkers;
 
@@ -85,7 +84,7 @@ public class AEMSassCompilerService implements ScriptCompiler {
         }
 
         try {
-            SassCompiler compiler = SassCompiler.getInstance();
+            SassCompiler compiler = new SassCompiler();
             long t1 = System.currentTimeMillis();
             log.info("Setup less compiler environment in {}ms", t1 - t0);
 

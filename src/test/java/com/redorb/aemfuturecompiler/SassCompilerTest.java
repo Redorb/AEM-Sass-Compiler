@@ -10,7 +10,7 @@ public class SassCompilerTest {
 
     @Test
     public void testBasicCompileFile() {
-        SassCompiler sass = SassCompiler.getInstance();
+        SassCompiler sass = new SassCompiler();
         try {
             assertEquals(".selector {\n  margin: 10px; }\n  .selector .nested {\n    margin: 5px; }\n",
                          sass.compileFile("src/test/java/com/redorb/testingResources/basic_test.scss"));
@@ -21,7 +21,7 @@ public class SassCompilerTest {
 
     @Test
     public void testBasicCompileString() {
-        SassCompiler sass = SassCompiler.getInstance();
+        SassCompiler sass = new SassCompiler();
         try {
             assertEquals(".selector {\n  margin: 10px; }\n  .selector .nested {\n    margin: 5px; }\n",
                     sass.compileString("$foo: 10px;\n" +
@@ -38,7 +38,7 @@ public class SassCompilerTest {
 
     @Test
     public void testExtendCompileFile() {
-        SassCompiler sass = SassCompiler.getInstance();
+        SassCompiler sass = new SassCompiler();
         try {
             assertEquals(".message, .success, .error, .warning {\n" +
                             "  border: 1px solid #ccc;\n" +

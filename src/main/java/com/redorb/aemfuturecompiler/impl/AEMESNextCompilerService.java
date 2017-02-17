@@ -27,7 +27,7 @@ import java.util.Set;
 import static org.osgi.framework.Constants.SERVICE_DESCRIPTION;
 import static org.osgi.framework.Constants.SERVICE_VENDOR;
 
-@Component(immediate = true)
+@Component(immediate = true, metatype = false)
 @Service(ScriptCompiler.class)
 @org.apache.felix.scr.annotations.Properties({
         @Property(
@@ -40,8 +40,7 @@ import static org.osgi.framework.Constants.SERVICE_VENDOR;
         )
 })
 public class AEMESNextCompilerService implements ScriptCompiler {
-    private static final Logger log = LoggerFactory.getLogger(AEMESNextCompilerService.class);
-    private SassCompiler sassCompiler = SassCompiler.getInstance();
+    static final Logger log = LoggerFactory.getLogger(AEMESNextCompilerService.class);
     private Set<String> supportedFilesTypes = new HashSet<>(
             Arrays.asList("js", ".js", "es6", ".es6", "es7", ".es7"));
     private boolean includeSourceMarkers;
@@ -90,7 +89,7 @@ public class AEMESNextCompilerService implements ScriptCompiler {
         }
 
         try {
-            EcmaScriptNextCompiler compiler = EcmaScriptNextCompiler.getInstance();
+            EcmaScriptNextCompiler compiler = new EcmaScriptNextCompiler();
             long t1 = System.currentTimeMillis();
             log.info("Setup js compiler environment in {}ms", t1 - t0);
 
