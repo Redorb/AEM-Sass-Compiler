@@ -8,6 +8,7 @@ import com.redorb.aemfuturecompiler.compilers.EcmaScriptNextCompiler;
 import com.redorb.aemfuturecompiler.compilers.SassCompiler;
 import org.apache.commons.io.IOUtils;
 import org.apache.felix.scr.annotations.Component;
+import org.apache.felix.scr.annotations.Property;
 import org.apache.felix.scr.annotations.Service;
 import org.apache.jackrabbit.util.Text;
 import org.slf4j.Logger;
@@ -23,8 +24,21 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-@Component
-@Service
+import static org.osgi.framework.Constants.SERVICE_DESCRIPTION;
+import static org.osgi.framework.Constants.SERVICE_VENDOR;
+
+@Component(immediate = true)
+@Service(ScriptCompiler.class)
+@org.apache.felix.scr.annotations.Properties({
+        @Property(
+                name = SERVICE_VENDOR,
+                value = "Kenan Warren"
+        ),
+        @Property(
+                name = SERVICE_DESCRIPTION,
+                value = "ESNext Compiler"
+        )
+})
 public class AEMESNextCompilerService implements ScriptCompiler {
     private static final Logger log = LoggerFactory.getLogger(AEMESNextCompilerService.class);
     private SassCompiler sassCompiler = SassCompiler.getInstance();
